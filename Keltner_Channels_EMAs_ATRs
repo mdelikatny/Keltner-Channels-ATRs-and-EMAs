@@ -1,0 +1,56 @@
+//@version=4
+study("Keltner Channels with EMAs", overlay=true)
+
+// Keltner channel parameters
+length = input(title="Keltner Channel Length", defval=20, minval=1)
+mult = input(title="Keltner Channel Multiplier", defval=2.0, minval=0.001, maxval=50)
+
+// Exponential moving average (EMA) lengths
+emaLength1 = input(title="EMA Length 1", defval=9)
+emaLength2 = input(title="EMA Length 2", defval=14)
+emaLength3 = input(title="EMA Length 3", defval=21)
+emaLength4 = input(title="EMA Length 4", defval=50)
+emaLength5 = input(title="EMA Length 5", defval=100)
+
+
+// Calculate Keltner channels
+upper = ema(high, length) + mult * stdev(close, length)
+middle = ema(close, length)
+lower = ema(low, length) - mult * stdev(close, length)
+
+// Calculate EMAs
+ema1 = ema(close, emaLength1)
+ema2 = ema(close, emaLength2)
+ema3 = ema(close, emaLength3)
+ema4 = ema(close, emaLength4)
+ema5 = ema(close, emaLength5)
+
+// Calculate slowEMA and ATR bands
+slowEMA = ema(close, 22)
+atrBand = atr(13)
+atrPlus1 = slowEMA + atrBand
+atrPlus2 = slowEMA + atrBand*2
+atrPlus3 = slowEMA + atrBand*3
+atrMinus1 = slowEMA - atrBand
+atrMinus2 = slowEMA - atrBand*2
+atrMinus3 = slowEMA - atrBand*3
+
+
+// Plot Keltner channels and EMAs
+plot(upper, color=color.rgb(234, 11, 11, 48), linewidth=1,title="KCupper")
+plot(middle, color=color.black, linewidth=1,title="KCmiddle")
+plot(lower, color=color.rgb(165, 35, 35), linewidth=1,title="KClower")
+plot(ema1, color=color.orange, linewidth=1,title="EMA9")
+plot(ema2, color=color.yellow, linewidth=1,title="EMA14")
+plot(ema3, color=color.green, linewidth=1,title="EMA21")
+plot(ema4, color=color.aqua, linewidth=1,title="EMA50")
+
+
+// Plot slowEMA and ATR bands
+plot(slowEMA, color=color.black, linewidth=2)
+plot(atrPlus1,  color=color.green, linewidth=1,title="ATR1")
+plot(atrPlus2, color=color.orange, linewidth=1,title="ATR2")
+plot(atrPlus3, color=color.maroon, linewidth=1,title="ATR3")
+plot(atrMinus1,  color=color.green, linewidth=1,title="-ATR1")
+plot(atrMinus2, color=color.orange, linewidth=1,title="-ATR2")
+plot(atrMinus3, color=color.maroon, linewidth=1,title="-ATR3")
